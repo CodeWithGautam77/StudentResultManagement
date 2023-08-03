@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=\, initial-scale=1.0">
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous">
+        <title>Document</title>
+        <style>
+        table{
+            background-color: black;
+            color: white;
+            box-shadow: 0px 0px 20px gray;
+        }
+        
+        tr{
+            border: 2px solid white;
+        }
+        td{
+            border: 2px solid white;
+            padding: 5px;
+        }
+        .a{
+            color: red;
+            font-weight: lighter !important;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="container py-5">
+            <h1 class="text-center text-danger">Show Result</h1>
+
+            <div class="pt-5">
+                <center>
+                    <table id="tbl">
+                        <tr id="tr1">
+                            <td id="name" class="a fw-bold">Student Name</td>
+                        </tr>
+                        <tr id="tr3">
+                            <td class="a fw-bold">Archived Marks</td>
+                        </tr>
+                        <tr id="tr4">
+                            <td class="a fw-bold">Total Marks</td>
+                        </tr>
+                        <tr id="tr5">
+                            <td class="a fw-bold">Percentage</td>
+                        </tr>
+                        <tr id="tr2">
+                            <td class="a fw-bold">Subject Name</td>
+                            <td class="a fw-bold">Marks</td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+        </div>
+
+        <script>
+        const ShowResult = async ()=> {
+            try {
+                const id = window.location.search.split("?id=")[1]
+               
+                const result = await fetch(`http://localhost:5100/marks/${id}`)
+                if(result.status === 200){
+                    res = await result.json()
+                }
+  
+                let tbl = document.getElementById("tbl")
+                let tr1 = document.getElementById("tr1")
+                let tr3 = document.getElementById("tr3")
+                let tr5 = document.getElementById("tr5")
+        
+
+                for (let i = 0; i < res.result.length; i++) {
+                    
+                    let tr = document.createElement("tr")
+
+                    let St_name = document.createElement("td")
+                    St_name.innerText = res.result[i].student.name
+
+                    let Sb_name = document.createElement("td")
+                    let T_mark = document.createElement("td")
+                    const tmp =  res.result[i].subject
+          
+                    tmp.map((x) => {
+                        let tr2 = document.createElement("tr")
+                        let names = document.createElement("td")
+                        let marks = document.createElement("td")
+
+                        names.innerText = x.name
+                        marks.innerText = x.marks
+
+                        tr2.appendChild(names)
+                        tr2.appendChild(marks)
+                        tbl.appendChild(tr2)
+                    })
+
+                   
+                    
+                    let A_mark = document.createElement("td")
+                    A_mark.innerText = res.result[i].archivedMarks
+
+                    let totalMarks = document.createElement("td")
+                    totalMarks.innerText = res.result[i].totalMarks
+
+                    let per = document.createElement("td")
+                    per.innerText = res.result[i].percentage + "%"
+
+                    tr1.appendChild(St_name)
+                    tr.appendChild(Sb_name)
+                    tr3.appendChild(A_mark)
+                    tr4.appendChild(totalMarks)
+                    tr5.appendChild(per)
+                }
+                tbl.appendChild(tr)    
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        ShowResult()
+   </script>
+    </body>
+</html>
